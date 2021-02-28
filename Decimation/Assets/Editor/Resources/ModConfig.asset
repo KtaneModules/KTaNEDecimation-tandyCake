@@ -11,10 +11,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 615501dbe4f3fe94fbf4b564abb10237, type: 3}
   m_Name: ModConfig
   m_EditorClassIdentifier: 
-  id: template
-  title: Template
-  author: 
-  description: 
-  version: 
+  id: decimation
+  title: Decimation
+  author: Danny7007
+  description: "The numbers don't lie. Well okay maybe they do.\n\nModule Created
+    by Danny7007\r\nmoduleID: decimation\t\nManual can be found on ktane.timwi.de\r\n"
+  version: 1.0.0
   outputFolder: build
-  previewImage: {fileID: 0}
+  previewImage: {fileID: 2800000, guid: a1884a29c5717b24ba02700894b37fc7, type: 3}
