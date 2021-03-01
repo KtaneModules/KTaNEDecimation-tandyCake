@@ -63,7 +63,7 @@ public class DecimationScript : MonoBehaviour {
             case 1:
                 operatorDisplay.text = "*";
                 botNum %= 10;
-                digitDisplays[2].text = Convert.ToString(botNum / 10);
+                digitDisplays[2].text = Convert.ToString(botNum / 10); //Makes sure the second number will always be a single digit for stage 2.
                 solution = LunarMult(topNum, botNum);
                 break;
             case 2:
@@ -86,13 +86,13 @@ public class DecimationScript : MonoBehaviour {
         {
             AString = "0" + AString;
         }
-        while (BString.Length < maxLength)
+        while (BString.Length < maxLength)    // Makes sure that the sequences are the same length.
         {
             BString = "0" + BString;
         }
         for (int i = 0; i < maxLength; i++)
         {
-            CString += Convert.ToChar(Math.Max(AString[i], BString[i]));
+            CString += Convert.ToChar(Math.Max(AString[i], BString[i])); // Needs Convert.ToChar because chars are actually the same as ints, and I was too lazy to look up the number to subtract for it to work.
         }
 
         return Convert.ToInt32(CString);
@@ -107,11 +107,11 @@ public class DecimationScript : MonoBehaviour {
         {
             AString = "0" + AString;
         }
-        while (BString.Length < maxLength)
+        while (BString.Length < maxLength)    //Makes sure sequences are same length, yada yada you know the drill.
         {
             BString = "0" + BString;
         }
-        AString = Reverse(AString);
+        AString = Reverse(AString); //Reverses the strings so that the multiplication goes left-to right.
         BString = Reverse(BString);
         Debug.Log(AString);
         Debug.Log(BString);
@@ -128,17 +128,17 @@ public class DecimationScript : MonoBehaviour {
             {
                 temp = "0" + temp;
             }
-            temp = Reverse(temp);
+            temp = Reverse(temp); //Makes things left-to-right again.
             stringsToAdd[i] = int.Parse(temp);
         }
         if (stringsToAdd.Length == 1)
         {
-            return stringsToAdd[0];
+            return stringsToAdd[0]; // If there's only one digit, return that. Otherwise lunar add them. 
         }
         else return LunarAdd(stringsToAdd[0], stringsToAdd[1]);
 
     }
-    string Reverse(string input)
+    string Reverse(string input) //who didnt tell me that .Reverse didn't work with strings what
     {
         return input.ToCharArray().Reverse().Join("");
     }
@@ -148,7 +148,7 @@ public class DecimationScript : MonoBehaviour {
         Audio.PlaySoundAtTransform("button chirp", key.transform);
         if (!moduleSolved)
         {
-            inputBox = (inputBox * 10 + Array.IndexOf(keypad, key)) % 10000;
+            inputBox = (inputBox * 10 + Array.IndexOf(keypad, key)) % 10000; // Appends the digit, the fancy way!
             inputDisplay.text = inputBox.ToString();
         }
     }
@@ -171,6 +171,7 @@ public class DecimationScript : MonoBehaviour {
                     moduleSolved = true;
                     GetComponent<KMBombModule>().HandlePass();
                     StartCoroutine(SolveAnim());
+
                 }
                 else
                 {
@@ -182,6 +183,8 @@ public class DecimationScript : MonoBehaviour {
             else
             {
                 GetComponent<KMBombModule>().HandleStrike();
+                inputBox = 0;
+                inputDisplay.text = string.Empty;
                 Debug.LogFormat("[Decimation #{0}] You submitted {1}, that was incorrect; strike.", moduleId, inputBox);
             }
         }
@@ -205,7 +208,7 @@ public class DecimationScript : MonoBehaviour {
     }
 
     #pragma warning disable 414
-    private readonly string TwitchHelpMessage = @"Use !{0} to do something.";
+    private readonly string TwitchHelpMessage = @"Use !{0} submit 123 to submit that number into the module. The module will automatically clear input.";
     #pragma warning restore 414
 
     IEnumerator ProcessTwitchCommand (string Command)
@@ -226,6 +229,10 @@ public class DecimationScript : MonoBehaviour {
             else
             {
                 yield return null;
+                while (inputBox != 0)
+                {
+                    keypad[0].OnInteract();
+                }
                 foreach (char letter in numToSubmit)
                 {
                     keypad[int.Parse(letter.ToString())].OnInteract();
@@ -242,6 +249,10 @@ public class DecimationScript : MonoBehaviour {
     {
         while (!moduleSolved)
         {
+            while (inputBox != 0)
+            {
+                keypad[0].OnInteract();
+            }
             string toSubmit = solution.ToString();
             foreach (char letter in toSubmit)
             {
