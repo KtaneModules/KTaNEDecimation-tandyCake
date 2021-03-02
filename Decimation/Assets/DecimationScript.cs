@@ -183,9 +183,9 @@ public class DecimationScript : MonoBehaviour {
             else
             {
                 GetComponent<KMBombModule>().HandleStrike();
+                Debug.LogFormat("[Decimation #{0}] You submitted {1}, that was incorrect; strike.", moduleId, inputBox);
                 inputBox = 0;
                 inputDisplay.text = string.Empty;
-                Debug.LogFormat("[Decimation #{0}] You submitted {1}, that was incorrect; strike.", moduleId, inputBox);
             }
         }
     }
