@@ -152,6 +152,26 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 114718026756621120, guid: 85a2c623b85c45f4fbcbd5bedc7a4b15,
+        type: 2}
+      propertyPath: stageIndicators.Array.data[0]
+      value: 
+      objectReference: {fileID: 2113041756}
+    - target: {fileID: 114718026756621120, guid: 85a2c623b85c45f4fbcbd5bedc7a4b15,
+        type: 2}
+      propertyPath: stageIndicators.Array.data[1]
+      value: 
+      objectReference: {fileID: 1201187409}
+    - target: {fileID: 114718026756621120, guid: 85a2c623b85c45f4fbcbd5bedc7a4b15,
+        type: 2}
+      propertyPath: stageIndicators.Array.data[2]
+      value: 
+      objectReference: {fileID: 1965495462}
+    - target: {fileID: 114718026756621120, guid: 85a2c623b85c45f4fbcbd5bedc7a4b15,
+        type: 2}
+      propertyPath: indLit
+      value: 
+      objectReference: {fileID: 2100000, guid: 9e1ff8fbb05f7aa46ab4fbd07a3cc782, type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 85a2c623b85c45f4fbcbd5bedc7a4b15, type: 2}
   m_IsPrefabParent: 0
@@ -293,6 +313,11 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 8814ea52310d2614a9feda02ec355ae4, type: 2}
   m_IsPrefabParent: 0
+--- !u!23 &1201187409 stripped
+MeshRenderer:
+  m_PrefabParentObject: {fileID: 23822218649954298, guid: 85a2c623b85c45f4fbcbd5bedc7a4b15,
+    type: 2}
+  m_PrefabInternal: {fileID: 37582707}
 --- !u!1 &1737623372
 GameObject:
   m_ObjectHideFlags: 0
@@ -358,3 +383,13 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
+--- !u!23 &1965495462 stripped
+MeshRenderer:
+  m_PrefabParentObject: {fileID: 23893371585579548, guid: 85a2c623b85c45f4fbcbd5bedc7a4b15,
+    type: 2}
+  m_PrefabInternal: {fileID: 37582707}
+--- !u!23 &2113041756 stripped
+MeshRenderer:
+  m_PrefabParentObject: {fileID: 23472452327752400, guid: 85a2c623b85c45f4fbcbd5bedc7a4b15,
+    type: 2}
+  m_PrefabInternal: {fileID: 37582707}
