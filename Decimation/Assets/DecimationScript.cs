@@ -15,17 +15,15 @@ public class DecimationScript : MonoBehaviour {
     public TextMesh[] digitDisplays;
     public TextMesh operatorDisplay;
     public TextMesh inputDisplay;
-    public GameObject[] stageIndicators;
-    public Material[] indicatorColors;
-    public GameObject submitObject;
-    public KMHighlightable submitHL;
+    public MeshRenderer[] stageIndicators;
+    public Material indLit;
 
     static int moduleIdCounter = 1;
     int moduleId;
     private bool moduleSolved;
 
-    int inputBox = 0;
-    int solution = 0;
+    int inputBox;
+    int solution;
     int stage = 0;
     int topNum;
     int botNum;
@@ -33,26 +31,19 @@ public class DecimationScript : MonoBehaviour {
     void Awake () {
         moduleId = moduleIdCounter++;
         foreach (KMSelectable key in keypad) 
-        {
             key.OnInteract += delegate () { KeypadPress(key); return false; };
-        }
         submit.OnInteract += delegate () { Submit(); return false; };
-
     }
 
     void Start ()
     {
-        GenerateStage(0);
+        GenerateStage();
     }
 
-    void GenerateStage(int stageNumber)
+    void GenerateStage()
     {
         topNum = UnityEngine.Random.Range(0, 100);
         botNum = UnityEngine.Random.Range(0, 100);
-        digitDisplays[0].text = Convert.ToString(topNum / 10);
-        digitDisplays[1].text = Convert.ToString(topNum % 10);
-        digitDisplays[2].text = Convert.ToString(botNum / 10);
-        digitDisplays[3].text = Convert.ToString(botNum % 10);
 
         switch (stage)
         {
@@ -63,7 +54,6 @@ public class DecimationScript : MonoBehaviour {
             case 1:
                 operatorDisplay.text = "*";
                 botNum %= 10;
-                digitDisplays[2].text = Convert.ToString(botNum / 10); //Makes sure the second number will always be a single digit for stage 2.
                 solution = LunarMult(topNum, botNum);
                 break;
             case 2:
@@ -71,84 +61,61 @@ public class DecimationScript : MonoBehaviour {
                 solution = LunarMult(topNum, botNum);
                 break;
         }
+        digitDisplays[0].text = (topNum / 10).ToString();
+        digitDisplays[1].text = (topNum % 10).ToString();
+        digitDisplays[2].text = (botNum / 10).ToString();
+        digitDisplays[3].text = (botNum % 10).ToString();
         Debug.LogFormat("[Decimation #{0}] STAGE {1}: The displayed numbers are {2} and {3}.", moduleId, stage + 1, topNum, botNum);
         Debug.LogFormat("[Decimation #{0}] The correct answer is {1}.", moduleId, solution);
 
     }
 
-    int LunarAdd(int A, int B)
+    int LunarAdd(int first, int second)
     {
-        string AString = Convert.ToString(A);
-        string BString = Convert.ToString(B);
-        string CString = String.Empty;
-        int maxLength = Math.Max(AString.Length, BString.Length);
-        while (AString.Length < maxLength)
-        {
-            AString = "0" + AString;
-        }
-        while (BString.Length < maxLength)    // Makes sure that the sequences are the same length.
-        {
-            BString = "0" + BString;
-        }
+        int maxLength = Math.Max(first.ToString().Length, second.ToString().Length);
+        string A = first.ToString().PadLeft(maxLength, '0');
+        string B = second.ToString().PadLeft(maxLength, '0');
+        int result = 0;
         for (int i = 0; i < maxLength; i++)
         {
-            CString += Convert.ToChar(Math.Max(AString[i], BString[i])); // Needs Convert.ToChar because chars are actually the same as ints, and I was too lazy to look up the number to subtract for it to work.
+            result *= 10;
+            result += Math.Max(A[i], B[i]) - '0';
         }
-
-        return Convert.ToInt32(CString);
+        return result;
     }
-    int LunarMult(int A, int B)
+    int LunarMult(int first, int second)
     {
-        string AString = Convert.ToString(A);
-        string BString = Convert.ToString(B);
-        int maxLength = Math.Max(AString.Length, BString.Length);
-        int[] stringsToAdd = new int[maxLength];
-        while (AString.Length < maxLength)
+        int maxLength = Math.Max(first.ToString().Length, second.ToString().Length);
+        string A = first.ToString().PadLeft(maxLength, '0');
+        string B = second.ToString().PadLeft(maxLength, '0');
+        int append = 0;
+        Stack<int> adders = new Stack<int>();
+        for (int i = A.Length - 1; i >= 0; i--)
         {
-            AString = "0" + AString;
-        }
-        while (BString.Length < maxLength)    //Makes sure sequences are same length, yada yada you know the drill.
-        {
-            BString = "0" + BString;
-        }
-        AString = Reverse(AString); //Reverses the strings so that the multiplication goes left-to right.
-        BString = Reverse(BString);
-        Debug.Log(AString);
-        Debug.Log(BString);
-
-        string temp;
-        for (int i = 0; i < maxLength; i++)
-        {
-            temp = string.Empty;
-            for (int j = 0; j < maxLength; j++)
+            string result = "";
+            for (int j = B.Length - 1; j >= 0; j--)
             {
-               temp += Math.Min(int.Parse(AString[j].ToString()), int.Parse(BString[i].ToString()));
+                result = Math.Min(A[j], B[i]) - '0' + result;
             }
-            for (int j = 0; j < i; j++)
-            {
-                temp = "0" + temp;
-            }
-            temp = Reverse(temp); //Makes things left-to-right again.
-            stringsToAdd[i] = int.Parse(temp);
+            for (int k = 0; k < append; k++)
+                result += '0';
+            append++;
+            adders.Push(int.Parse(result));
         }
-        if (stringsToAdd.Length == 1)
-        {
-            return stringsToAdd[0]; // If there's only one digit, return that. Otherwise lunar add them. 
-        }
-        else return LunarAdd(stringsToAdd[0], stringsToAdd[1]);
+        Debug.Log(adders.Join());
+        while (adders.Count > 1)
+            adders.Push(LunarAdd(adders.Pop(), adders.Pop()));
+        return adders.First();
+    }
 
-    }
-    string Reverse(string input) //who didnt tell me that .Reverse didn't work with strings what
-    {
-        return input.ToCharArray().Reverse().Join("");
-    }
     void KeypadPress(KMSelectable key)
     {
         key.AddInteractionPunch(0.25f);
         Audio.PlaySoundAtTransform("button chirp", key.transform);
         if (!moduleSolved)
         {
-            inputBox = (inputBox * 10 + Array.IndexOf(keypad, key)) % 10000; // Appends the digit, the fancy way!
+            inputBox *= 10;
+            inputBox += Array.IndexOf(keypad, key) % 10000; // Appends the digit, the fancy way!
             inputDisplay.text = inputBox.ToString();
         }
     }
@@ -163,22 +130,19 @@ public class DecimationScript : MonoBehaviour {
                 Debug.LogFormat("[Decimation #{0}] You submitted {1}, that was correct.", moduleId, inputBox);
                 inputBox = 0;
                 inputDisplay.text = string.Empty;
-
-                stageIndicators[stage].GetComponent<MeshRenderer>().material = indicatorColors[1];
+                stageIndicators[stage].material = indLit;
                 Audio.PlaySoundAtTransform("stage pass", submit.transform);
                 if (stage == 2)
                 {
                     moduleSolved = true;
                     GetComponent<KMBombModule>().HandlePass();
                     StartCoroutine(SolveAnim());
-
                 }
                 else
                 {
                     stage++;
-                    GenerateStage(stage);
+                    GenerateStage();
                 }
-
             }
             else
             {
@@ -192,57 +156,42 @@ public class DecimationScript : MonoBehaviour {
     IEnumerator SolveAnim()
     {
         foreach (TextMesh text in digitDisplays)
-        {
             text.text = string.Empty;
-        }
         operatorDisplay.text = string.Empty;
-        Vector3 sphereScale = submit.transform.localScale;
-        while (sphereScale.x > 0)
+        while (submit.transform.localScale.x - 0.1f > 0)
         {
-            sphereScale = submit.transform.localScale;
-            submit.transform.localScale = new Vector3(sphereScale.x - 0.07f, sphereScale.y - 0.07f, sphereScale.z - 0.07f);
-            submitHL.transform.localScale = new Vector3(sphereScale.x - 0.06f, sphereScale.y - 0.06f, sphereScale.z - 0.06f);
+            submit.transform.localScale -= 0.1f * Vector3.one;
             yield return null;
         }
-        submitObject.SetActive(false);
+        submit.gameObject.SetActive(false);
     }
 
     #pragma warning disable 414
     private readonly string TwitchHelpMessage = @"Use !{0} submit 123 to submit that number into the module. The module will automatically clear input.";
     #pragma warning restore 414
 
-    IEnumerator ProcessTwitchCommand (string Command)
+    IEnumerator ProcessTwitchCommand (string input)
     {
-        string[] parameters = Command.Trim().ToUpperInvariant().Split(' ');
-        string numToSubmit = string.Empty;
-        if ((parameters.Length != 2) || (parameters[0] != "SUBMIT"))
+        string command = input.Trim().ToUpperInvariant();
+        List<string> parameters = command.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries).ToList();
+        if (parameters.Count != 2 || parameters.First() != "SUBMIT")
+            yield break;
+        if (parameters.Last().Any(x => !"0123456789".Contains(x)))
         {
-            yield return "sendtochaterror";
+            yield return "sendtochaterror Invalid number";
+            yield break;
         }
-        else
+        yield return null;
+        while (inputBox != 0)
         {
-            numToSubmit = parameters[1];
-            if (numToSubmit.Any(x => !"0123456789".Contains(x)))
-            {
-                yield return "sendtochaterror";
-            }
-            else
-            {
-                yield return null;
-                while (inputBox != 0)
-                {
-                    keypad[0].OnInteract();
-                }
-                foreach (char letter in numToSubmit)
-                {
-                    keypad[int.Parse(letter.ToString())].OnInteract();
-                    yield return new WaitForSeconds(0.1f);
-                }
-                submit.OnInteract();
-            }
-         }
-
-      yield return null;
+            keypad[0].OnInteract();
+            yield return new WaitForSeconds(0.1f);
+        }
+        foreach (char digit in parameters.Last())
+        {
+            keypad[digit - '0'].OnInteract();
+            yield return new WaitForSeconds(0.1f);
+        }
     }
 
     IEnumerator TwitchHandleForcedSolve ()
@@ -252,16 +201,15 @@ public class DecimationScript : MonoBehaviour {
             while (inputBox != 0)
             {
                 keypad[0].OnInteract();
+                yield return new WaitForSeconds(0.1f);
             }
-            string toSubmit = solution.ToString();
-            foreach (char letter in toSubmit)
+            foreach (char letter in solution.ToString())
             {
-                keypad[int.Parse(letter.ToString())].OnInteract();
+                keypad[letter - '0'].OnInteract();
                 yield return new WaitForSeconds(0.1f);
             }
             submit.OnInteract();
             yield return new WaitForSeconds(0.1f);
-            yield return true;
         }
       yield return null;
     }

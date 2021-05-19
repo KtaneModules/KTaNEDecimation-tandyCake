@@ -1647,11 +1647,11 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1656584494236024}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6, y: 1, z: -1.0000001}
-  m_LocalScale: {x: 1.8, y: 1.8, z: 1.8}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1.0588235, y: 1.0588235, z: 1.0588235}
   m_Children: []
-  m_Father: {fileID: 4767770383484060}
-  m_RootOrder: 1
+  m_Father: {fileID: 4756003159656166}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4740615578100286
 Transform:
@@ -1730,7 +1730,8 @@ Transform:
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 6, y: 1, z: -1}
   m_LocalScale: {x: 1.7, y: 1.7, z: 1.7}
-  m_Children: []
+  m_Children:
+  - {fileID: 4723358354871768}
   m_Father: {fileID: 4767770383484060}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -1758,7 +1759,6 @@ Transform:
   m_LocalScale: {x: 0.015, y: 0.015, z: 0.015}
   m_Children:
   - {fileID: 4756003159656166}
-  - {fileID: 4723358354871768}
   m_Father: {fileID: 4257340207950476}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -4527,19 +4527,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Parent: {fileID: 114139553842080666}
   Children:
-  - {fileID: 114942689412157868}
   - {fileID: 114007533364972002}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 114098482191113300}
   - {fileID: 114507471080270574}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 114302033325766302}
   - {fileID: 114552091113977710}
   - {fileID: 114669908353446686}
+  - {fileID: 0}
+  - {fileID: 0}
   - {fileID: 114161919768906864}
   - {fileID: 114243886726507700}
   - {fileID: 114950819178734040}
   - {fileID: 114419762428658126}
+  - {fileID: 114942689412157868}
   IsPassThrough: 0
-  ChildRowLength: 0
+  ChildRowLength: 5
   Highlight: {fileID: 114570430299588062}
   SelectableColliders: []
   DefaultSelectableIndex: 0
@@ -5226,14 +5235,10 @@ MonoBehaviour:
   operatorDisplay: {fileID: 102232983476946374}
   inputDisplay: {fileID: 102565644284848896}
   stageIndicators:
-  - {fileID: 1678348798686922}
-  - {fileID: 1603930105158618}
-  - {fileID: 1596105802827924}
-  indicatorColors:
-  - {fileID: 2100000, guid: 9e3368cefd37f8347a42f73aad070b87, type: 2}
-  - {fileID: 2100000, guid: 9e1ff8fbb05f7aa46ab4fbd07a3cc782, type: 2}
-  submitObject: {fileID: 1768042698024368}
-  submitHL: {fileID: 114328568030216192}
+  - {fileID: 23472452327752400}
+  - {fileID: 23822218649954298}
+  - {fileID: 23893371585579548}
+  indLit: {fileID: 2100000, guid: 9e1ff8fbb05f7aa46ab4fbd07a3cc782, type: 2}
 --- !u!114 &114753588497139230
 MonoBehaviour:
   m_ObjectHideFlags: 1
