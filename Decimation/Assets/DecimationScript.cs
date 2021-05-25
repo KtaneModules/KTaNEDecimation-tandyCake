@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
 using UnityEngine;
 using KModkit;
 
@@ -116,6 +115,7 @@ public class DecimationScript : MonoBehaviour {
         {
             inputBox *= 10;
             inputBox += Array.IndexOf(keypad, key) % 10000; // Appends the digit, the fancy way!
+            inputBox %= 10000;
             inputDisplay.text = inputBox.ToString();
         }
     }
@@ -192,6 +192,7 @@ public class DecimationScript : MonoBehaviour {
             keypad[digit - '0'].OnInteract();
             yield return new WaitForSeconds(0.1f);
         }
+        submit.OnInteract();
     }
 
     IEnumerator TwitchHandleForcedSolve ()
